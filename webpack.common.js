@@ -11,7 +11,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin')
 /********************************************************************* */
 
 module.exports = {
-    entry: path.resolve(__dirname, wConfig.dir.source, "index.js"),
+    entry: path.resolve(__dirname, wConfig.dir.source, "index.tsx"),
     experiments: {
         outputModule: wConfig.outputESModule,
     },
@@ -23,12 +23,13 @@ module.exports = {
         pathinfo: false, // optimization
     },
     resolve: {
-        alias: wConfig.alias
+        alias: wConfig.alias,
+        extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(ts|tsx|js)$/,
                 exclude: /node_modules/,
                 include: path.resolve(__dirname, wConfig.dir.source),
                 use: [{
@@ -77,6 +78,7 @@ module.exports = {
             cwd: process.cwd(),
         }),
         new ESLintPlugin({
+            extensions: ["js", "jsx", "ts", "tsx"],
             exclude: path.resolve(__dirname, "node_modules"),
             files: path.resolve(__dirname, wConfig.dir.source),
         }),

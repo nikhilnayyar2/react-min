@@ -78,7 +78,8 @@ module.exports = {
                         modules: outputESModule ? false : "auto",
                         bugfixes: true
                     }
-                ]
+                ],
+                "@babel/preset-typescript"
             ]
         }),
         generateIntialVendorChunk: true,
