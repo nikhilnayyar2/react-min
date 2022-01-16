@@ -1,12 +1,84 @@
+html,
+body {
+  height: 100%;
+}
 * {
   box-sizing: border-box;
 }
+body {
+  margin: 0;
+}
 
-html,
-body,
-#root {
+table {
+  width: auto;
+  max-width: 100%;
+  min-width: unset;
+  table-layout: auto;
+  border-spacing: initial; /* does not work when border-collapse is set to collapse*/
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th {
+  font-weight: bold;
+  background: #f0f0f0;
+}
+
+td,
+th {
+  text-align: left;
+  vertical-align: top;
+  padding: 1rem;
+}
+
+/*******************/
+.table-container {
+  overflow: auto;
+  max-width: 100%;
+  display: inline-flex;
+}
+
+.word-break td,
+.word-break th {
+  word-break: break-word;
+}
+
+.equal-width-col td,
+.equal-width-col th {
+  width: 33.33%;
+}
+
+.min-width-30rem table {
+  min-width: 30rem;
+}
+
+.max-height-30rem {
+  max-height: 18rem;
+}
+
+.sticky-header th{
+  position: sticky;
+  top: 0;
+}
+.sticky-header th:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
   height: 100%;
 }
-body {
+.sticky-header th:before {
+  top: -1px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+/*******************/
+#App {
   margin: 0;
 }
