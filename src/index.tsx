@@ -2,8 +2,9 @@ import "@styles/index.scss";
 
 import ReactDOM from "react-dom";
 import React from "react";
-import { Table } from "./table";
+import { TableWithContainer } from "./TableWithContainer";
 import { tableNotes } from "./data";
+import { Table } from "./Table";
 
 function App() {
   return (
@@ -18,25 +19,37 @@ function App() {
       <ul id="App">
         <li>
           <p>-</p>
-          <Table />
+          <TableWithContainer />
         </li>
         <li>
           <p>word-break</p>
-          <Table className="word-break" />
+          <TableWithContainer className="word-break" />
         </li>
         <li>
           <p>word-break equal-width-col</p>
-          <Table className="word-break equal-width-col" />
+          <TableWithContainer className="word-break equal-width-col" />
         </li>
         <li>
           <p>word-break equal-width-col min-width-30rem</p>
-          <Table className="word-break equal-width-col min-width-30rem" />
+          <TableWithContainer className="word-break equal-width-col min-width-30rem" />
         </li>
         <li>
           <p>word-break equal-width-col min-width-30rem max-height-30rem sticky-header</p>
-          <Table className="word-break equal-width-col min-width-30rem max-height-30rem sticky-header" />
+          <TableWithContainer className="word-break equal-width-col min-width-30rem max-height-30rem sticky-header" />
         </li>
       </ul>
+      <div>
+        <p>deeply nested table</p>
+        <div>
+          <span>
+            <span>
+              <span>
+                <Table />
+              </span>
+            </span>
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
