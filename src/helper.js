@@ -6,12 +6,11 @@ const delta = 2;
  * @param {HTMLElement} popup
  * @param {import("types").PopupPosition} position
  * @param {MouseEvent} mouseEvent
- * @param {number} delay
  * @param {boolean} showTooltipAtMouseCursor
  * @param {number} offset
  * @returns
  */
-export const showPopup = (target, popup, position, mouseEvent, delay, showTooltipAtMouseCursor, offset) => {
+export const showPopup = (target, popup, position, mouseEvent, showTooltipAtMouseCursor, offset) => {
   const arr = position.split(" ");
 
   // resources
@@ -154,10 +153,8 @@ export const showPopup = (target, popup, position, mouseEvent, delay, showToolti
 
       if (positionClass) popup.className = `${popup.className} ${positionClass}`;
 
-      return setTimeout(() => {
-        popup.style.transform = `translate(${x}px,${y}px)`;
-        popup.style.opacity = "1";
-      }, delay);
+      popup.style.transform = `translate(${x}px,${y}px)`;
+      popup.style.opacity = "1";
     }
   }
 };

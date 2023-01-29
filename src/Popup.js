@@ -1,7 +1,7 @@
-import { showPopup } from "helper";
+import { showPopup } from "./helper";
 import { cloneElement, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import useStyles from "styles";
+import useStyles from "./styles";
 
 /**
  * @param {{
@@ -10,9 +10,10 @@ import useStyles from "styles";
  * style: import("react").CSSProperties
  * content: import("react").ReactNode;
  * position: import("types").PopupPosition;
- * delay: number;
+ * mouseEnterDelay: number;
+ * mouseLeaveDelay: number;
  * offset: number;
- * showTooltipAtMouseCursor: boolean;
+ * showPopupAtMouseCursor: boolean;
  * inverted: boolean;
  * }} param0
  */
@@ -22,9 +23,10 @@ export default function Popup({
   style,
   content,
   position = "top center",
-  delay = 0,
+  mouseEnterDelay,
+  mouseLeaveDelay,
   offset = 10,
-  showTooltipAtMouseCursor = false,
+  showPopupAtMouseCursor = false,
   inverted,
 }) {
   const [setup, setSetup] = useState(false);
@@ -32,9 +34,29 @@ export default function Popup({
   const targetRef = useRef(/** @type {HTMLElement} */ (null));
   const popupRef = useRef(/** @type {HTMLElement} */ (null));
   const styles = useStyles({ inverted });
+  const mouseEnterDelayTimeoutRef = useRef(null);
+  const mouseLeaveDelayTimeoutRef = useRef(null);
 
-  const onMouseEnter = useCallback((/** @type {MouseEvent} */ e) => setMouseEvent(e), []);
-  const onMouseLeave = useCallback(() => setMouseEvent(null), []);
+  const onMouseEnter = useCallback((/** @type {MouseEvent} */ e) => {
+    if (mouseLeaveDelayTimeoutRef.current) clearTimeout(mouseLeaveDelayTimeoutRef.current);
+    else setMouseEvent(e);
+  }, []);
+
+  const onMouseLeave = useCallback(() => {
+    if (mouseLeaveDelay && !mouseEnterDelayTimeoutRef.current)
+      mouseLeaveDelayTimeoutRef.current = setTimeout(() => {
+        mouseLeaveDelayTimeoutRef.current = null;
+        setMouseEvent(null);
+      }, mouseLeaveDelay);
+    else {
+      setMouseEvent(null);
+
+      if (mouseEnterDelayTimeoutRef.current) {
+        clearTimeout(mouseEnterDelayTimeoutRef.current);
+        mouseEnterDelayTimeoutRef.current = null;
+      }
+    }
+  }, [mouseLeaveDelay]);
 
   const _trigger = useMemo(
     () => cloneElement(trigger, { onMouseEnter, onMouseLeave, ref: targetRef }),
@@ -51,6 +73,8 @@ export default function Popup({
 
       return () => div.remove();
     }
+
+    setSetup(true);
   }, []);
 
   useEffect(() => {
@@ -58,11 +82,14 @@ export default function Popup({
 
     const target = targetRef.current;
     const popup = popupRef.current;
+    const callback = () => {
+      showPopup(target, popup, position, mouseEvent, showPopupAtMouseCursor, offset);
+      mouseEnterDelayTimeoutRef.current = null;
+    };
 
-    const timeout = showPopup(target, popup, position, mouseEvent, delay, showTooltipAtMouseCursor, offset);
-
-    if (timeout) return () => clearTimeout(timeout);
-  }, [mouseEvent, delay, position, showTooltipAtMouseCursor, offset]);
+    if (mouseEnterDelay) mouseEnterDelayTimeoutRef.current = setTimeout(callback, mouseEnterDelay);
+    else callback();
+  }, [mouseEvent, mouseEnterDelay, position, showPopupAtMouseCursor, offset]);
 
   return setup ? (
     <>
