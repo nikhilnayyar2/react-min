@@ -3,6 +3,8 @@ import { cloneElement, useCallback, useEffect, useMemo, useRef, useState } from 
 import { createPortal } from "react-dom";
 import useStyles from "./styles";
 
+const rootElemId = "cp-diy-popup-root";
+
 /**
  * @param {{
  * trigger: import("react").ReactNode;
@@ -64,14 +66,12 @@ export default function Popup({
   );
 
   useEffect(() => {
-    if (!document.getElementById("popup-root")) {
+    if (!document.getElementById(rootElemId)) {
       const div = document.createElement("div");
-      div.id = "popup-root";
+      div.id = rootElemId;
       document.body.appendChild(div);
 
       setSetup(true);
-
-      return () => div.remove();
     }
 
     setSetup(true);
@@ -99,7 +99,7 @@ export default function Popup({
               {content}
             </div>,
 
-            document.getElementById("popup-root")
+            document.getElementById(rootElemId)
           )
         : null}
 
